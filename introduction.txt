@@ -1,0 +1,10 @@
+Arthur Bacon
+
+I have a little over a year's worth of experience with Unity, and recently published a mobile game using the engine. 
+I have no experience with Python, although I'm excited to learn.
+I have limited experience with RPG Maker VX Ace (Ruby scripting along with drag and drop programming).
+I have attended a few hack-a-thons/ game jams and have worked with small teams to develop virtual games before. 
+
+From this course, I hope to get a solid foundation for using Unity. Currently I have just self taught the engine, so my understanding of the finer points, optimizations or other settings are lacking. I want to get exposure to other game engines also like Unreal, at least I would like to know where the starting point is so I can practice on my own. I'm also looking forward to building more pieces that I can showcase in a portfolio, both to apply for a game design position, but also as a general coding position. I want to grow my skills.
+
+I'm also looking forward to getting to know others in the class and start networking with them. Learning about their personal projects, helping others to build/test and they would help me. 
