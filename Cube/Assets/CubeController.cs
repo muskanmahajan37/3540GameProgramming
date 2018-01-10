@@ -5,6 +5,7 @@ using UnityEngine;
 public class CubeController : MonoBehaviour {
 
     public float cubeSpeed;
+    public float cubeScaleSpeed;
 
 	// Use this for initialization
 	void Start () {
@@ -34,16 +35,31 @@ public class CubeController : MonoBehaviour {
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            //this.transform.position.Set(0, (-1 * cubeSpeed * (float)Time.deltaTime) + this.transform.position.y, 0);
-            this.transform.position = new Vector3(transform.position.x,
+           this.transform.position = new Vector3(transform.position.x,
                                                   (-1 * cubeSpeed * (float)Time.deltaTime) + this.transform.position.y,
                                                   transform.position.z);
         }
 
         // Make the cube spin
-        this.transform.Rotate(new Vector3(1, 0, 0));
+        this.transform.Rotate(new Vector3(0, 0, 1));
 
-        // Change the color
-        this.GetComponent<Renderer>().material.color = new Color(255, 255, 255);
+        // Change the color to red
+        this.GetComponent<Renderer>().material.SetColor("_Color", new Color(255, 0, 0));
+
+        // Scale the shape 
+        if (Input.GetKey(KeyCode.Q))
+        {
+            this.transform.localScale += 
+                new Vector3(cubeScaleSpeed * (float)Time.deltaTime,
+                            cubeScaleSpeed * (float)Time.deltaTime,
+                            cubeScaleSpeed * (float)Time.deltaTime);
+        }
+        else if (Input.GetKey(KeyCode.W))
+        {
+            this.transform.localScale -=
+                new Vector3(cubeScaleSpeed * (float)Time.deltaTime,
+                            cubeScaleSpeed * (float)Time.deltaTime,
+                            cubeScaleSpeed * (float)Time.deltaTime);
+        }
     }
 }
