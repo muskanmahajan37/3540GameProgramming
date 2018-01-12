@@ -39,7 +39,6 @@ def keyboardup(c, x, y):
     global keys_down
 
     keys_down.discard(c.lower())
-    print(c.lower());
 
 # handle state update on timer
 def timer(value):
@@ -49,10 +48,19 @@ def timer(value):
     dt = TIMER_TIME / 1000.0
 
     # TODO: update state
-    if "w" in keys_down
-      # move square up
-      square_x += 0.02;
     
+    # vertical movement
+    if "w" in keys_down:
+      # move square up
+      square_y += 0.01;
+    elif "s" in keys_down:
+      square_y -= 0.01;
+
+    # horizontal movement
+    if "a" in keys_down:
+      square_x -= 0.01;
+    elif "d" in keys_down:
+      square_x += 0.01;
     # end TODO
 
     glutPostRedisplay()
@@ -76,12 +84,8 @@ def display():
     glColor3f(1, 1, 1)
 
     # TODO: display square
-    
     # (0,0) is bottom left
     drawrect(square_x, square_y, SQUARE_SIZE, SQUARE_SIZE);
-    
-    
-    # end TODO
 
     glutSwapBuffers()
 
