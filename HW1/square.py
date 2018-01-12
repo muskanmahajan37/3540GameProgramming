@@ -48,19 +48,18 @@ def timer(value):
     dt = TIMER_TIME / 1000.0
 
     # TODO: update state
-    
     # vertical movement
     if "w" in keys_down:
       # move square up
-      square_y += 0.01;
+      square_y += SQUARE_SPEED * dt;
     elif "s" in keys_down:
-      square_y -= 0.01;
+      square_y -= SQUARE_SPEED * dt;
 
     # horizontal movement
     if "a" in keys_down:
-      square_x -= 0.01;
+      square_x -= SQUARE_SPEED * dt;
     elif "d" in keys_down:
-      square_x += 0.01;
+      square_x += SQUARE_SPEED * dt;
     # end TODO
 
     glutPostRedisplay()
