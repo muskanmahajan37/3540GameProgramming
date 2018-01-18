@@ -6,6 +6,10 @@ public class CubeController : MonoBehaviour {
 
     public float cubeSpeed;
     public float cubeScaleSpeed;
+    
+    bool xRotate = true;
+    bool yRotate = false;
+    bool zRotate = false;
 
 	// Use this for initialization
 	void Start () {
@@ -46,9 +50,12 @@ public class CubeController : MonoBehaviour {
                                                   transform.position.z);
         }
 
-        // Make the cube spin
-        this.transform.Rotate(new Vector3(0, 0, 1));
 
+
+        // Make the cube spin
+        this.transform.Rotate(new Vector3(1,1,1));
+        
+        
         // Change the color to red
         this.GetComponent<Renderer>().material.SetColor("_Color", new Color(255, 0, 0));
 
