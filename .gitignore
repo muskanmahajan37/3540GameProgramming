@@ -5,6 +5,9 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 
+# packages
+*.zip
+
 # Visual Studio 2015 cache directory
 /.vs/
 
