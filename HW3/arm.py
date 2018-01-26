@@ -49,9 +49,9 @@ def drawArm():
 
     # TODO: draw the robot arm
     
-    # Move arm into position
+    # Move root into position
     glTranslatef(root_translate, ROOT_LENGTH/2, 0);
-    #rotate the arm
+    #rotate the toot
     glTranslatef(ROOT_WIDTH/2, -ROOT_LENGTH/2, 0);
     glRotatef(root_rotate, 0, 0, -1);
     glTranslatef(-ROOT_WIDTH/2, ROOT_LENGTH/2, 0);
@@ -59,24 +59,25 @@ def drawArm():
     glPushMatrix()
     glScalef(ROOT_WIDTH, ROOT_LENGTH, 1);
 
-    drawSquare();
+    drawSquare(); # draw the root
     glPopMatrix();
 
     # Move seg into position (relative to arm)
     glTranslatef(SEG_WIDTH/8, (ROOT_LENGTH/2) + (seg_length/2) , 0);
     # rotate the seg
     glTranslatef(SEG_WIDTH/2 , -seg_length/2, 0);
-    glRotatef(seg_rotate, 0, 0, -1);
+    glRotatef(seg_rotate, 0, 0, 1);
     glTranslatef(-SEG_WIDTH/2 , seg_length/2, 0);
     
     
     glPushMatrix();
     glScalef(SEG_WIDTH, seg_length, 1);
-    drawSquare();
+    drawSquare();  # draw the seg
     glPopMatrix();
     
+    glPushMatrix();  # save state, so we can return for the other fingers
     
-    glPushMatrix();
+    # Building first finger on the left
     glTranslatef(0, (seg_length/2) + (FINGER_LENGTH/2), 0);
     glTranslatef(FINGER_WIDTH/2, -FINGER_LENGTH/2, 0);
     glRotatef(finger_rotate, 0, 0, 1);
@@ -84,10 +85,10 @@ def drawArm():
     
     glPushMatrix();
     glScalef(FINGER_WIDTH, FINGER_LENGTH, 1);
-    drawSquare();
-    glPopMatrix(); # firsts finger on the left
+    drawSquare(); # firsts finger on the left
+    glPopMatrix();
     
-    
+    # Building second finger on the left
     glTranslatef(0, FINGER_LENGTH, 0);
     glTranslatef(FINGER_WIDTH/2, -FINGER_LENGTH/2, 0);
     glRotatef(-finger_rotate, 0, 0, 1);
@@ -95,11 +96,12 @@ def drawArm():
     
     glPushMatrix();
     glScalef(FINGER_WIDTH, FINGER_LENGTH, 1);
-    drawSquare();
-    glPopMatrix(); # second finger on the left
+    drawSquare(); # second finger on the left
+    glPopMatrix();
     
     glPopMatrix(); # finsihed left fingers
 
+    # Building first finger on the right
     glTranslatef(SEG_WIDTH - FINGER_WIDTH, (seg_length/2) + (FINGER_LENGTH/2), 0);
     glTranslatef(FINGER_WIDTH/2, -FINGER_LENGTH/2, 0);
     glRotatef(-finger_rotate, 0, 0, 1);
@@ -107,9 +109,10 @@ def drawArm():
 
     glPushMatrix();
     glScalef(FINGER_WIDTH, FINGER_LENGTH, 1);
-    drawSquare();
+    drawSquare();  # First finger on the right
     glPopMatrix();
 
+    # Building second finger on the firhgt
     glTranslatef(0, FINGER_LENGTH, 0);
     glTranslatef(FINGER_WIDTH/2, -FINGER_LENGTH/2, 0);
     glRotatef(finger_rotate, 0, 0, 1);
@@ -117,7 +120,7 @@ def drawArm():
 
     glPushMatrix();
     glScalef(FINGER_WIDTH, FINGER_LENGTH, 1);
-    drawSquare();
+    drawSquare();  # Second finger on the right
     glPopMatrix();
 
     # End TODO
@@ -137,39 +140,34 @@ def mouseButton(button, state, mx, my):
     # Chapter 6.4 Inverse Kinematics
     #
     
-    my = 480 - my;
+    my = SIZE - my;
     mx = mx - root_translate;
     temp = mx;
     mx = my;
     my = temp;
 
-    
-    #print str(pow((ROOT_LENGTH - seg_length), 2.0) <= pow(mx, 2.0) + pow(my, 2.0));
-    #print str(pow(mx, 2.0) + pow(my, 2.0) <= pow((ROOT_LENGTH + seg_length), 2.0));
+
     if (((ROOT_LENGTH - seg_length) ** 2.0) <= (mx ** 2.0) + (my ** 2.0) and
         (mx ** 2.0) + (my ** 2.0) <= ((ROOT_LENGTH + seg_length) ** 2.0)) :
       
-        cos2 = (acos(((mx ** 2.0) +
+        ang2 = (acos(((mx ** 2.0) +
                       (my ** 2.0) -
                       (ROOT_LENGTH ** 2.0) -
                       (seg_length ** 2.0)) /
                      (2.0 * ROOT_LENGTH * seg_length)));
                     
-        cos1 = (atan(my / mx) -
-                atan(seg_length * sin(cos2) /
-                     ((ROOT_LENGTH + seg_length * cos(cos2)))));
+        ang1 = (atan(my / mx) -
+                atan(seg_length * sin(ang2) /
+                     ((ROOT_LENGTH + seg_length * cos(ang2)))));
+
     else :
       return;
 
-    if(my > 0):
-      root_rotate = 90 - degrees(cos1);
-      seg_rotate =  -degrees(cos2);
-    else :
-      root_rotate = degrees(cos1) ;
-      seg_rotate = degrees(cos2) ;
 
-    print str(root_rotate);
-    print str(seg_rotate);
+    # Unfortunatly I couldn't figure out how to get the elbow to 'bend' in the
+    # other direction.
+    root_rotate = degrees(ang1);
+    seg_rotate =  -degrees(ang2);
 
 
 
