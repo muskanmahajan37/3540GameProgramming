@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody rb;
     private int count;
     private bool inAir;
-    private bool gameStart;
+	private bool activeGame;
+	private bool gameOver;
     private float totalTimePlayed;
 
     void Start()
@@ -24,47 +25,50 @@ public class PlayerController : MonoBehaviour {
         winText.text = "";
         inAir = false;
         clockText.text = "0:00";
-        gameStart = false;
+        activeGame = false;
+		gameOver = false;
         totalTimePlayed = 0.0f;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !inAir)
-        {
-            rb.AddForce(new Vector3(0.0f, 250, 0.0f));
-            inAir = true;
-        }
+		if (!gameOver) {
+			
+			if (Input.GetKeyDown (KeyCode.Space) && !inAir) {
+				rb.AddForce (new Vector3 (0.0f, 250, 0.0f));
+				inAir = true;
+			}
 
-        if (gameStart)
-        {
-            totalTimePlayed += Time.deltaTime;
-            int seconds = ((int)totalTimePlayed) % 60;
-            int minutes = (int)(totalTimePlayed / 60);
-            string textForClock = minutes.ToString() + ":";
-            if (seconds < 10)
-            {
-                textForClock += "0" + seconds.ToString();
-            } else
-            {
-                textForClock += seconds.ToString();
-            }
-            clockText.text = textForClock;
-        }
+			// Display and update the clock. 
+			if (activeGame) {
+				totalTimePlayed += Time.deltaTime;
+				int seconds = ((int)totalTimePlayed) % 60;
+				int minutes = (int)(totalTimePlayed / 60);
+				string textForClock = minutes.ToString () + ":";
+				if (seconds < 10) {
+					textForClock += "0" + seconds.ToString ();
+				} else {
+					textForClock += seconds.ToString ();
+				}
+				clockText.text = textForClock;
+			}
+		}
     }
 
     void FixedUpdate()
     {
-        if (Input.anyKeyDown)
-        {
-            gameStart = true;
-        }
+		if(!gameOver) {
+			if (Input.anyKeyDown)
+	        {
+	            activeGame = true;
+	        }
 
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
+	        float moveHorizontal = Input.GetAxis("Horizontal");
+	        float moveVertical = Input.GetAxis("Vertical");
 
-        rb.AddForce(new Vector3(moveHorizontal, 0.0f, moveVertical) * ballSpeed);
-    }
+	        rb.AddForce(new Vector3(moveHorizontal, 0.0f, moveVertical) * ballSpeed);
+    	}
+	}
 
     
 
@@ -89,6 +93,12 @@ public class PlayerController : MonoBehaviour {
             count++;
             this.setCountText();
         }
+
+		if (collision.gameObject.CompareTag ("Baddie")) {
+			activeGame = false;
+			gameOver = true;
+			winText.text = "Game over. You loose.";
+		}
     }
 
     private void setCountText()
@@ -97,7 +107,7 @@ public class PlayerController : MonoBehaviour {
         if (count >= 8)
         {
             winText.text = "You win!";
-            gameStart = false;
+            activeGame = false;
         }
     }
 }
