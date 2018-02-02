@@ -1,0 +1,5 @@
+Only 1 extension, required for the base assignment:
+
+ * Add some "platinum" pickups that are worth 2 (you should still need to get all the pickups to win).
+
+The platinum pickups are green.
