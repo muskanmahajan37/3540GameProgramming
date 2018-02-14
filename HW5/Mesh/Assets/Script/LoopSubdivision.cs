@@ -17,10 +17,21 @@ public class LoopSubdivision : MonoBehaviour
     private List<List<Vector3>> simpleTriangles;
     private Dictionary<int, float> lambdaOldWork;
 
+    bool myApprox(float a, float b) {
+        float delta = 0.000001f;  // Experience shows that this is a good delta
+        float temp = a - b;
+
+        return (temp < 0 && temp > -delta) ||
+               (temp >= 0 && temp < delta);
+    }
+
     bool compareVertices(Vector3 v1, Vector3 v2) {
-        return Mathf.Approximately(v1.x, v2.x) &&
-               Mathf.Approximately(v1.y, v2.y) &&
-               Mathf.Approximately(v1.z, v2.z);
+        return myApprox(v1.x, v2.x) &&
+            myApprox(v1.y, v2.y) &&
+            myApprox(v1.z, v2.z);
+        //return Mathf.Approximately(v1.x, v2.x) &&
+        //       Mathf.Approximately(v1.y, v2.y) &&
+        //       Mathf.Approximately(v1.z, v2.z);
     }
 
     bool inList(Vector3 v, List<Vector3> l) {
