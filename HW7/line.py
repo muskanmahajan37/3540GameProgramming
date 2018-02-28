@@ -8,6 +8,7 @@ PIXEL_SIZE = 10
 SIZE = 40
 LINE_COLOR = 128
 
+
 # view state
 pixels = [[(0, 0, 0) for i in xrange(SIZE)] for i in xrange(SIZE)] # grid of pixels to be displayed
 currMouse = None # current position of mouse
@@ -15,9 +16,59 @@ lastMouse = None # previous position of mouse click
 
 # function to draw a line into pixels
 def drawline(p0, p1):
-    global pixels
+    global pixels, prevColor
 
     # TODO: implement line drawing algorithm
+    
+    if (p1[0] < p0[0]) :
+      # If the second point is to the left of the first point, switch the points
+      temp = p1
+      p1 = p0
+      p0 = temp
+    
+    slope = 0
+    if (p1[0] != p0[0]) :
+      # make sure we're not dividing by 0
+      slope = (float(p1[1]) - float(p0[1])) / (float(p1[0]) - float(p0[0]))
+    else :
+      # Else slope is vertical
+      slope = 10  # this value just needs to be greater than 1 to trigger
+                  # the vertical specalization code
+    
+    
+        
+    if (abs(slope) <= 1) :
+      # We have a shallow slope, move right and decided if we should move up/ down 1
+      dir = 1 # default move y in pos direction
+      if slope < 0 :
+        # the slope is negative, move down 1
+        dir = -1
+      err = 0.0
+      y = 0
+      for x in range((p1[0] - p0[0]) + 1) :
+        if err > 0.5 :
+          y += dir  # Adjust the y up or down if err is large enough
+          err -= 1.0
+        err += abs(slope) # Use the abs of the slope to ignore pos/neg distinctions
+        pixels[p0[0] + x][p0[1] + y] = (255, 255, 255)
+
+    else :
+      altSlope =  (float(p1[0]) - float(p0[0])) / (float(p1[1]) - float(p0[1])) # Change in x / change in y
+      # we have steep slope, move up/down and decided if we should move right 1
+      dir = 1 #default move up
+      if (p1[1] - p0[1]) < 0 :
+        dir = -1  # if we have neg slope, move down
+      err = 0.0
+      x = 0
+      for y in range(abs((p1[1] - p0[1])) + 1) : # Here, y represents the delta with NO direction
+        if err > 0.5 :
+          err -= 1.0
+          x += 1    # X always moves to the right
+        err += abs(altSlope) # Use the abs of the slope to ignore pos/neg distinctions
+        pixels[p0[0] + x][p0[1] + (dir * y)] = (255, 255, 255)
+
+
+    
     pass
 
 
