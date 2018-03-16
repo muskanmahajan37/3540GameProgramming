@@ -84,7 +84,6 @@ class Node:
             # If there are no objects in this node
             # AND there are no children nodes
             self._objects.append(object)
-            print("No other obejcts, and no children")
             return
 
         # Else, there either already are other objects, or there are children
@@ -105,13 +104,13 @@ class Node:
                 q3 = Node(((x0,     y0),     (x0 + w, y0 + h)), self._depth + 1)
                 q4 = Node(((x0 + w, y0),     (x1,     y0 + h)), self._depth + 1)
 
-                print("Building children: ")
-                print ("(x0: " + str(x0) + ") (y0: " + str(y0) + ") (x1: " + str(x1) + ") (y1: " + str(y1))
-                print ("W: " + str(w) + "     h: " + str(h))
-                print ("q1: " + str(((x0 + w, y0 + h), (x1,     y1))))
-                print ("q2: " + str(((x0,     y0 + h), (x0 + w, y1))))
-                print ("q3: " + str(((x0,     y0),     (x0 + w, y0 + h))))
-                print ("q4: " + str(((x0 + w, y0),     (x1,     y0 + h))))
+                #print("Building children: ")
+                #print ("(x0: " + str(x0) + ") (y0: " + str(y0) + ") (x1: " + str(x1) + ") (y1: " + str(y1))
+                #print ("W: " + str(w) + "     h: " + str(h))
+                #print ("q1: " + str(((x0 + w, y0 + h), (x1,     y1))))
+                #print ("q2: " + str(((x0,     y0 + h), (x0 + w, y1))))
+                #print ("q3: " + str(((x0,     y0),     (x0 + w, y0 + h))))
+                #print ("q4: " + str(((x0 + w, y0),     (x1,     y0 + h))))
 
                 self._children = [q1, q2, q3, q4]
 
@@ -139,6 +138,10 @@ class Node:
                         q1.insertObject(self._objects[0])
 
                 self._objects = []
+
+            else :
+                # else we are not allowed to subdivide,
+                self._objects.append(object)
 
         # Below will sort new incoming object into correct child
         if (self._children) :
@@ -176,41 +179,56 @@ class Node:
 
         self._visited = True
 
+        x, y = pt
+        (x0, y0), (x1, y1) = self._bounds
+        w = (x1 - x0) / 2
+        h = (y1 - y0) / 2
+        sl = OBJECT_SIZE / 2
+
         if (len(self._objects) != 0 ) :
+            result = []
             # If there are objects in this block
             # Check to see if we clicked on any
-            print("TODO: check click on objs")
+            print("Found objects. count: " + str(len(self._objects)))
+            print("Obj xy: " + str(self._objects[0]))
+            for i in range(0, len(self._objects)) :
+                curObj = self._objects[i]
+                objX, objY = curObj
+                # Check each object to see if the pt is inside it
+                xRange = ((objX - sl) <= x) and (x <= (objX + sl))
+                yRange = ((objY - sl) <= y) and (y <= (objY + sl))
+
+                if xRange and yRange :
+                    print("Clicked on object!")
+                    result.append(curObj)
+                    print(result)
+            print("returning result: " + str(result))
+            return result
+
 
         if (self._children) :
             # If there are children
             # Recur down and simulate a click on the correct children
 
-            x, y = pt
-            (x0, y0), (x1, y1) = self._bounds
-            w = (x1 - x0) / 2
-            h = (y1 - y0) / 2
-            sl = OBJECT_SIZE / 2
             if (x < x0 + w ) :
                 # If we click left
                 if (y < y0 + h) :
                     # If we click left AND down => q3
-                    self._children[2].findObjects(pt)
+                    return self._children[2].findObjects(pt)
                 else :
                     # If we click left AND up => q2
-                    self._children[1].findObjects(pt)
+                    return self._children[1].findObjects(pt)
             else :
                 # Else we clicked right
                 if (y < y0 + h) :
                     # If we click right AND down => q4
-                    self._children[3].findObjects(pt)
+                    return self._children[3].findObjects(pt)
                 else :
                     # If we click right AND up => q1
-                    self._children[0].findObjects(pt)
+                    return self._children[0].findObjects(pt)
 
-        else :
-            # Else there are no children, and no objects
-            self.display(True)
-
+        # Else there are no children, and no objects
+        return []
         pass
 
 
@@ -246,6 +264,8 @@ def mouseButton(button, state, xx, yy):
 
     quadtree.clearVisited()
     objects_selected = quadtree.findObjects((xx, WORLD_SIZE - yy - 1))
+    print("result in mouseButton: " + str(quadtree.findObjects((xx, WORLD_SIZE - yy - 1))))
+    print("objects_selected: " + str(objects_selected))
 
     glutPostRedisplay()
 
